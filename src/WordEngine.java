@@ -4,12 +4,11 @@ import java.util.Scanner;
 
 public class WordEngine {
     public static String [] words;
-    int nextWord;
-    String currentGuess;
-    String currentWord;
+    int currentWordIndex;
+    StringBuffer guessState;
 
-    WordEngine() throws IOException {
-        FileReader fr = new FileReader("trivia.txt");
+    WordEngine(String fileName) throws IOException {
+        FileReader fr = new FileReader(fileName);
         Scanner sc = new Scanner(fr);
         words = new String [sc.nextInt()];
         int i = 0;
@@ -17,29 +16,52 @@ public class WordEngine {
             words[i] = sc.next();
             i++;
         }
-        nextWord = 0;
+        guessState = new StringBuffer();
+        for (int j = 0; j < words[currentWordIndex].length(); j++) {
+            guessState.append("X");
+        }
+        currentWordIndex = 0;
     }
 
-    public void setcurrentGuess() {
-        for (int i = 0; i < currentWord.length(); i++) {
-            currentWord += "X";
+    public StringBuffer getGuessState () { return guessState; }
+
+    public String getCurrentWord() {
+        return words[currentWordIndex];
+    }
+
+    public void setNextWord() { currentWordIndex++; }
+
+    public void resetGuessState() {
+        guessState = new StringBuffer();
+        for(int i = 0; i < words[currentWordIndex].length(); i++) {
+            guessState.append("X");
         }
     }
-
-    public String getNextWord() {
-        nextWord++;
-        currentGuess = words[nextWord];
-        return currentGuess;
-    }
-
     public void printCensored() {
-        if (nextWord == -1) {
-            return;
-        }
-        for (int i = 0; i < words[nextWord].length(); i++) {
-            System.out.println("X");
+        System.out.print("| " + guessState + " - length: " + guessState.length() + " |");
+    }
+    public boolean isCorrect(String guess) {
+        if (guess.equals(words[currentWordIndex])) {
+            setNextWord();
+            resetGuessState();
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public boolean guessword(St)
+    public void updateGuessState(String guess) {
+        if (guess.length() != words[currentWordIndex].length()) {
+            System.out.println("Not the correct length");
+            return;
+        } else {
+            for(int i = 0; i < words[currentWordIndex].length(); i++) {
+                if (guess.charAt(i) == words[currentWordIndex].charAt(i)) {
+                    guessState.setCharAt(i, words[currentWordIndex].charAt(i));
+                }
+            }
+        }
+
+
+    }
 }

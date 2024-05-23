@@ -5,23 +5,28 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String [] words = loadWords();
+        WordEngine wE = new WordEngine("words.txt");
+        Scanner input = new Scanner(System.in);
+        String perRoundGuess = "";
 
-    }
-
-   public static void censor() {
-
-   }
-
-    public static String [] loadWords() throws IOException {
-        FileReader fr = new FileReader("trivia.txt");
-        Scanner sc = new Scanner(fr);
-        String[] trivia = new String[sc.nextInt()];
-        int i = 0;
-        while (sc.hasNext()) {
-            trivia[i] = sc.next();
-            i++;
+        // game loop
+        while (!perRoundGuess.equals("exit")) {
+            System.out.println("| Guess the Word:     |");
+            wE.printCensored();
+            System.out.println();
+            System.out.print("| Enter a guess(exit to quit): ");
+            perRoundGuess = input.next();
+            if (!perRoundGuess.equals("exit")) {
+                wE.updateGuessState(perRoundGuess);
+                if (wE.isCorrect(perRoundGuess)) {
+                    System.out.println("Yay you got it Right!!!!!");
+                }
+            } else {
+                System.out.println("Have a nice day!");
+                break;
+            }
+            System.out.println();
         }
-        return trivia;
+
     }
 }
